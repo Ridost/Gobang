@@ -8,8 +8,9 @@ function createChess( position_X, position_Y , color) {
     if(chess == null){
         console.log("Error Create Chess");
     }else{
-        chess.x = position_X
-        chess.y = position_Y
+        chess.x = Qt.binding( function(){ return chessBoard.width * (1+position_X)/16 - chessBoard.width /32})
+        chess.y = Qt.binding( function(){ return chessBoard.height* (1+position_Y)/16 - chessBoard.height/32})
         chess.color = color
     }
 }
+
