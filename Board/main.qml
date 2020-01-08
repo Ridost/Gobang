@@ -57,13 +57,7 @@ Window {
             onClicked           : {
                 var posX = Math.round( (selectedframe.x+(chessBoard.width/32 )) / (chessBoard.width /16)) -1
                 var posY = Math.round( (selectedframe.y+(chessBoard.height/32)) / (chessBoard.height/16)) -1
-                if(chessPosition[posX][posY]===-1 ){
-                    chessPosition[posX][posY] = (currentColor=="#000000") ? 1 : 0
-                    MyScript.createChess(posX, posY, currentColor)
-                    currentColor = (currentColor=="#000000") ? "white" : "black"
-                }else{
-                    console.log("There has been a chess")
-                }
+                chessBoard.createChess(posX,posY)
             }
             function relocation(){
                 var mouse_x     = mouse.mouseX
@@ -80,6 +74,16 @@ Window {
                 selectedframe.x = Math.floor(((mouse_x - framewidth /2)   / framewidth   ))  * framewidth  + framewidth /2
                 selectedframe.y = Math.floor(((mouse_y - frameheight/2)   / frameheight  ))  * frameheight + frameheight/2
 
+            }
+        }
+
+        function createChess(posX,posY){
+            if(chessPosition[posX][posY]===-1 ){
+                chessPosition[posX][posY] = (currentColor=="#000000") ? 1 : 0
+                MyScript.createChess(posX, posY, currentColor)
+                currentColor = (currentColor=="#000000") ? "white" : "black"
+            }else{
+                console.log("There has been a chess")
             }
         }
     }
