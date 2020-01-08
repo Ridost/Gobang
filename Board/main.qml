@@ -1,16 +1,41 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
+import QtQuick.Controls 2.0
+import Qt.WebSockets 1.0
+import com.gobang 1.0
 import "chessCreation.js" as MyScript
 
 Window {
     property color currentColor: "black"
     property variant chessPosition : []     // -1: undefine ,0: white ,1: black
+    id      : window
     visible : true
     width   : 1280
     height  : 960
     Component.onCompleted: {
         for(var i=0;i<15;i++){
            chessPosition.push([-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1])
+        }
+    }
+
+    TCPClient{
+        id : tcp
+    }
+
+    Button{
+        id      : sender
+        width   : parent.width /8
+        height  : parent.height/16
+
+        anchors.top        : parent.top
+        anchors.topMargin  : parent.height/16
+        anchors.right      : parent.right
+        anchors.rightMargin: parent.width /16
+
+        text    : "SendMessage"
+        onClicked: {
+            tcp.createTCPConnect()
+            tcp.sendMsg("Hello World")
         }
     }
     Rectangle{
