@@ -4,13 +4,13 @@ import "chessCreation.js" as MyScript
 
 Window {
     property color currentColor: "black"
-    property variant chessPosition : []
+    property variant chessPosition : []     // -1: undefine ,0: white ,1: black
     visible : true
     width   : 1280
     height  : 960
     Component.onCompleted: {
         for(var i=0;i<15;i++){
-           chessPosition.push([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+           chessPosition.push([-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1])
         }
     }
     Rectangle{
@@ -57,8 +57,8 @@ Window {
             onClicked           : {
                 var posX = Math.round( (selectedframe.x+(chessBoard.width/32 )) / (chessBoard.width /16)) -1
                 var posY = Math.round( (selectedframe.y+(chessBoard.height/32)) / (chessBoard.height/16)) -1
-                if(chessPosition[posX][posY]===0 ){
-                    chessPosition[posX][posY] = 1
+                if(chessPosition[posX][posY]===-1 ){
+                    chessPosition[posX][posY] = (currentColor=="#000000") ? 1 : 0
                     MyScript.createChess(posX, posY, currentColor)
                     currentColor = (currentColor=="#000000") ? "white" : "black"
                 }else{
