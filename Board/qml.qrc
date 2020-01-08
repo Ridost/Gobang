@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>SelectedFrame.qml</file>
+        <file>Chess.qml</file>
+        <file>chessCreation.js</file>
     </qresource>
 </RCC>

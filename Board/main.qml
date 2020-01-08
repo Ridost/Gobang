@@ -1,7 +1,9 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
+import "chessCreation.js" as MyScript
 
 Window {
+    property color currentColor: "black"
     visible: true
     width   : 1280
     height  : 960
@@ -38,20 +40,18 @@ Window {
         SelectedFrame{
             id: selectedframe
             border  : 2
-            x       : chessBoard.width  *1.5/16
-            y       : chessBoard.height *1.5/16
             height  : chessBoard.height/16
             width   : chessBoard.width/16
 
         }
-
         MouseArea{
             id:mouse
             hoverEnabled        : true
             anchors.fill        : parent
             onPositionChanged   : relocation()
-            onClicked: {
-                console.log("position: ",mouseX,",",mouseY)
+            onClicked           : {
+                MyScript.createChess(selectedframe.x,selectedframe.y,currentColor)
+                currentColor = (currentColor=="#000000") ? "white" : "black"
             }
             function relocation(){
                 var framewidth  = chessBoard.width /16
