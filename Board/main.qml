@@ -123,6 +123,10 @@ Window {
                     break;
                 case "playing":
                     console.log(obj['table']['turn'],currentColor)
+                    if(obj['table']['forfeit'] === othername ){
+                        pageloader.item.overgame(myname)
+                        exiting.start()
+                    }
                     if(obj['table']['turn'] === "white" && currentColor == "#000000"){
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
@@ -154,6 +158,10 @@ Window {
                         player2.opacity = 0.9
                         pageloader.item.setMouse(true)
                     }
+                    break;
+                case "forfeit":
+                    pageloader.item.overgame(othername)
+                    exiting.start()
                     break;
                 case "gameover":
                     pageloader.item.overgame()

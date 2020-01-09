@@ -571,9 +571,12 @@ Rectangle{
     function setMouse(status){
         mouse.enabled = status
     }
-    function overgame(){
+    function overgame(playerName){
         gameover.z = 30
-        winner.text = (win_player == myColor) ? myname : othername
+        if(playerName===undefined)
+            winner.text = (win_player == myColor) ? myname : othername
+        else
+            winner.text = playerName
     }
     function resetgame(){
         gameover.z = -1
