@@ -574,5 +574,9 @@ Rectangle{
         gameover.z = 30
         winner.text = (win_player == myColor) ? myname : othername
     }
+    function resetgame(){
+        gameover.z = -1
+         winner.text = ""
+    }
 }
 

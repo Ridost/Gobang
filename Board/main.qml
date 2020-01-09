@@ -61,6 +61,8 @@ Window {
         repeat      : false
         interval    : 3000
         onTriggered: {
+            player1.setUserName("")
+            player2.setUserName("")
             pageloader.source = "Lobby.qml"
         }
     }
@@ -148,6 +150,7 @@ Window {
                 case "gameover":
                     pageloader.item.overgame()
                     exiting.start()
+                    pageloader.item.resetgame()
                     break;
 
             }
