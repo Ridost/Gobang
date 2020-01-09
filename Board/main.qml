@@ -96,7 +96,6 @@ Window {
                         var posY = obj['table']['lasty']
                         pageloader.item.createChess(posX,posY)
                         currentColor = "white"
-                        console.log("create1")
                     }else if(obj['table']['turn'] === "black" && currentColor == "#ffffff"){
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
@@ -105,9 +104,9 @@ Window {
                         currentColor = "black"
                     }
                     if(obj['table']['turn'] !== myColor){
-                       // main.active = false
+                        pageloader.item.setMouse(false)
                         waiting.start()
-                    }//else main.active = true
+                    }else pageloader.item.setMouse(true)
                     break;
                 default:
                     break;

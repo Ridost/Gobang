@@ -506,6 +506,8 @@ Rectangle{
             console.log("There has been a chess")
         }
     }
-
+    function setMouse(status){
+        mouse.enabled = status
+    }
 }
 
