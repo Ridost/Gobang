@@ -49,7 +49,7 @@ Rectangle{
         anchors.top : chessBoard.top
         text : "Forfeit"
         onClicked: {
-            var str = Packet.packet("forfeit")
+            var str = Packet.packet("forfeit","","",id)
             tcp.sendMsg(str)
         }
     }
