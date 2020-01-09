@@ -56,6 +56,24 @@ Window {
             tcp.sendMsg(str)
         }
     }
+    Timer{
+        id          : exiting
+        repeat      : false
+        interval    : 5000
+        onTriggered: {
+            player1.setUserName("")
+            player2.setUserName("")
+            player1.opacity = 0.7
+            player2.opacity = 0.7
+            id = ""
+            username = ""
+            myColor = ""
+            currentColor = "black"
+            pageloader.item.resetgame()
+            pageloader.source = "Lobby.qml"
+
+        }
+    }
     TCP{
         id : tcp
         Component.onCompleted: {
@@ -112,7 +130,7 @@ Window {
                         if( pageloader.item.win(posX,posY) ) {
                             var str = Packet.packet("gameover","","",id,posX,posY)
                             tcp.sendMsg(str)
-                            overgame()
+                            pageloader.item.overgame()
                         }
                         currentColor = "white"
                     }else if(obj['table']['turn'] === "black" && currentColor == "#ffffff"){
@@ -122,7 +140,7 @@ Window {
                         if( pageloader.item.win(posX,posY) ) {
                             var str = Packet.packet("gameover","","",id,posX,posY)
                             tcp.sendMsg(str)
-                            overgame()
+                            pageloader.item.overgame()
                         }
                         currentColor = "black"
                     }
@@ -136,6 +154,10 @@ Window {
                         player2.opacity = 0.9
                         pageloader.item.setMouse(true)
                     }
+                    break;
+                case "gameover":
+                    pageloader.item.overgame()
+                    exiting.start()
                     break;
                 default:
                     break;
