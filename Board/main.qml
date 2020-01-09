@@ -10,7 +10,7 @@ Window {
     property var id
     property var username
     property var myColor
-    property color currentColor
+    property color currentColor : "#000000"
 
     id : main
     width   : 1280
@@ -89,20 +89,24 @@ Window {
                     game.start()
                     break;
                 case "playing":
+                    console.log(obj['table']['turn'],currentColor)
                     if(obj['table']['turn'] === "white" && currentColor === "#000000"){
                         currentColor = "#ffffff"
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
+                        console.log("create1")
                         chessBoard.createChess(posX,posY)
                     }else if(obj['table']['turn'] === "black" && currentColor === "#ffffff"){
                         currentColor = "#000000"
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
+                        console.log("create2")
+                        chessBoard.createChess(posX,posY)
                     }
                     if(obj['table']['turn'] !== myColor){
-                        window.active = false
+                       // main.active = false
                         waiting.start()
-                    }else window.active = true
+                    }//else main.active = true
                     break;
                 default:
                     break;

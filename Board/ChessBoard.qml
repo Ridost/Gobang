@@ -138,6 +138,9 @@ Rectangle{
         function forbidden(posX,posY){
             //首子必在天元(7,7)
             if(board_empty()){
+                var str = Packet.packet("play","","",id,7,7)
+                console.log("Sent:" ,str)
+                tcp.sendMsg(str)
                 createChess(7,7);
                 return false;
             }
