@@ -17,6 +17,7 @@ Window {
     height  : 960
     visible : true
     color   : "green"
+
     Timer{
         id          : reconnect
         repeat      : false
@@ -95,13 +96,13 @@ Window {
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
                         console.log("create1")
-                        chessBoard.createChess(posX,posY)
+                        pageloader.item.createChess(posX,posY)
                     }else if(obj['table']['turn'] === "black" && currentColor == "#ffffff"){
                         currentColor = "black"
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
                         console.log("create2")
-                        chessBoard.createChess(posX,posY)
+                        pageloader.item.createChess(posX,posY)
                     }
                     if(obj['table']['turn'] !== myColor){
                        // main.active = false
