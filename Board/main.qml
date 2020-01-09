@@ -100,8 +100,9 @@ Window {
                         var posY = obj['table']['lasty']
                     }
                     if(obj['table']['turn'] !== myColor){
+                        main.focus = false
                         waiting.start()
-                    }
+                    }else main.focus = true
                     break;
                 default:
                     break;
