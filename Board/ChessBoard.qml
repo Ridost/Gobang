@@ -9,6 +9,9 @@ import  "packetCreate.js" as Packet
 Rectangle{
     property variant chessPosition : []     // -1: undefine ,0: white ,1: black
     property variant win_player : ""
+    property var posX
+    property var posY
+
     id     : background
     width  : parent.width
     height : parent.height
@@ -133,8 +136,8 @@ Rectangle{
             anchors.fill        : parent
             onPositionChanged   : relocation()
             onClicked           : {
-                var posX = Math.round( (selectedframe.x+(chessBoard.width/32 )) / (chessBoard.width /16)) -1
-                var posY = Math.round( (selectedframe.y+(chessBoard.height/32)) / (chessBoard.height/16)) -1
+                posX = Math.round( (selectedframe.x+(chessBoard.width/32 )) / (chessBoard.width /16)) -1
+                posY = Math.round( (selectedframe.y+(chessBoard.height/32)) / (chessBoard.height/16)) -1
                 if(chessBoard.forbidden(posX,posY)){
                     var str = Packet.packet("play","","",id,posX,posY)
                     tcp.sendMsg(str)
