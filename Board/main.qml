@@ -85,8 +85,16 @@ Window {
                 case "start":
                     busy.running = false
                     pageloader.source = "ChessBoard.qml"
-                    if( obj['table']['player1'] === username)   myColor = "black"
-                    else myColor = "white"
+                    if( obj['table']['player1'] === username)   {
+                        player1.username.text = username
+                        player2.username.text = obj['table']['player2']
+                        myColor = "black"
+                    }
+                    else {
+                        player1.username.text = username
+                        player2.username.text = obj['table']['player1']
+                        myColor = "white"
+                    }
                     game.start()
                     break;
                 case "playing":
@@ -105,8 +113,14 @@ Window {
                     }
                     if(obj['table']['turn'] !== myColor){
                         pageloader.item.setMouse(false)
+                        player1.opacity = 0.9
+                        player2.opacity = 0.4
                         waiting.start()
-                    }else pageloader.item.setMouse(true)
+                    }else {
+                        player1.opacity = 0.4
+                        player2.opacity = 0.9
+                        pageloader.item.setMouse(true)
+                    }
                     break;
                 default:
                     break;
@@ -136,7 +150,6 @@ Window {
         id    : player1
         width : parent.width * 0.15
         height: parent.height
-
         anchors.top : parent.top
         anchors.left: parent.left
     }
