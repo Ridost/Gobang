@@ -59,11 +59,19 @@ Window {
     Timer{
         id          : exiting
         repeat      : false
-        interval    : 3000
+        interval    : 5000
         onTriggered: {
             player1.setUserName("")
             player2.setUserName("")
+            player1.opacity = 0.7
+            player2.opacity = 0.7
+            id = ""
+            username = ""
+            myColor = ""
+            currentColor = "black"
+            pageloader.item.resetgame()
             pageloader.source = "Lobby.qml"
+
         }
     }
     TCP{
@@ -150,7 +158,6 @@ Window {
                 case "gameover":
                     pageloader.item.overgame()
                     exiting.start()
-                    pageloader.item.resetgame()
                     break;
                 default:
                     break;
