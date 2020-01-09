@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import "chessCreation.js" as MyScript
 import QtQuick.Controls 2.0
+import QtQuick.Dialogs 1.1
 import com.TCPClient 1.0
 
 Window {
@@ -19,12 +20,50 @@ Window {
         id:tcp
     }
     Button{
+        text : "Connect"
         onClicked: {
             tcp.createTCPConnect()
             tcp.sendMsg("123")
         }
     }
-
+    Button{
+        anchors.left: chessBoard.right
+        anchors.top : chessBoard.top
+        text : "DeleteAllChess"
+        onClicked: {
+            MyScript.deleteAllChess()
+            for(var i=0 ; i<15 ; i++){
+                for(var j =0 ; j<15 ; j++)
+                    chessPosition[i][j] = -1;
+            }
+            currentColor = "black"
+        }
+    }
+    Rectangle{
+        id  : message
+        width: chessBoard.width/8
+        height: chessBoard.height/36
+        opacity: 0.7
+        state: "Close"
+        color: "coral"
+        x : chessBoard.x + chessBoard.width/2
+        y : chessBoard.y + chessBoard.height/2
+        z : 0
+        Text{
+            text: "不能下這裡啦"
+            font.bold: true
+            font.pointSize: 10
+            color: "black"
+        }
+        PropertyAnimation{
+            id : animation
+            target: message
+            duration:  3000
+            property: "z";
+            from : 30;
+            to   : 0;
+        }
+    }
 
     Rectangle{
         id: chessBoard
@@ -111,6 +150,9 @@ Window {
             //禁手(雙三、雙四、雙死四、六子)
             for(var i = 0; i<4 ; i++){
                 if(!check(i,posX,posY)){
+                    message.x = selectedframe.x
+                    message.y = selectedframe.y
+                    animation.running = true;
                     return false;
                 }
             }
@@ -126,7 +168,6 @@ Window {
             }
             return true;
         }
-
         function check(way,posX,posY){
             switch (way){
             case 0: //雙三
