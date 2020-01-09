@@ -133,6 +133,64 @@ Rectangle{
                 console.log("There has been a chess")
             }
         }
+        function win(posX,posY){
+            var x_min = posX-4 >= 0 ? posX - 4 :  0;
+            var x_max = posX+4 < 15 ? posX + 4 : 14;
+            var y_min = posY-4 >= 0 ? posY - 4 :  0;
+            var y_max = posY+4 < 15 ? posY + 4 : 14;
+            var black_line = 0;
+            var white_line = 0;
+            //直
+            for(var i = y_min ; i <= y_max ; i++){
+                if(chessPosition[posX][i]===1)
+                    black_line++;
+                else
+                    black_line = 0;
+                if(chessPosition[posX][i]===0)
+                    white_line++;
+                else
+                    white_line = 0;
+                if(black_line===5 || white_line===5) return true;
+            }
+            //橫
+            for(var i = x_min ; i <= x_max ; i++){
+                if(chessPosition[i][posY]===1)
+                    black_line++;
+                else
+                    black_line = 0;
+                if(chessPosition[i][posY]===0)
+                    white_line++;
+                else
+                    white_line = 0;
+                if(black_line===5 || white_line===5) return true;
+            }
+            var temp  = (x_max-x_min) > (y_max-y_min) ?  (y_max-y_min) : (x_max-x_min);
+            //左斜(\)
+            for(var i = 0 ; i<=temp; i++){
+                if(chessPosition[x_min+i][y_min+i]===1)
+                    black_line++;
+                else
+                    black_line = 0;
+                if(chessPosition[x_min+i][y_min+i]===0)
+                    white_line++;
+                else
+                    white_line = 0;
+                if(black_line===5 || white_line===5) return true;
+            }
+            //右斜(/)
+            for(var i = 0 ; i<=temp; i++){
+                if(chessPosition[x_min+i][y_min-i]===1)
+                    black_line++;
+                else
+                    black_line = 0;
+                if(chessPosition[x_min+i][y_min-i]===0)
+                    white_line++;
+                else
+                    white_line = 0;
+                if(black_line===5 || white_line===5) return true;
+            }
+            return false;
+        }
 
         function forbidden(posX,posY){
             //首子必在天元(7,7)
@@ -141,18 +199,15 @@ Rectangle{
                 return false;
             }
             //禁手(雙三、雙四、雙死四、六子)
-            for(var i = 0; i<4 ; i++){
-                if(!check(i,posX,posY)){
-                    message.x = selectedframe.x
-                    message.y = selectedframe.y
-                    animation.running = true;
-                    return false;
-                }
-            }
 
+            if(!check(posX,posY)){
+                message.x = selectedframe.x
+                message.y = selectedframe.y
+                animation.running = true;
+                return false;
+            }
             return true;
         }
-
         function board_empty(){
             for(var i=0 ; i<15 ; i++){
                 for(var j =0 ; j<15 ; j++)
@@ -161,42 +216,282 @@ Rectangle{
             }
             return true;
         }
-        function check(way,posX,posY){
-            switch (way){
-            case 0: //雙三
-                //直
-                var invalid_cnt = 0;
-                var prev_state = chessPosition[posX][0];
-                for(var i = 1; i < 14; i++){
-                    if(chessPosition[posX][i]===1 && prev_state > 0 ){
-                        prev_state++;
+        function check(posX,posY){
+            //cnt1-> 雙三 cnt2-> 活四 cnt3-> 六子
+            var invalid_cnt1 = 0;
+            var invalid_cnt2 = 0;
+            var invalid_cnt3 = 0;
 
-                    }
-                    else if(prev_state===-1 &&　chessPosition[posX][i]){
-                        prev_state = 1;
-                    }
-                    else if(chessPosition[posX][i]!==1){
-                        prev_state = chessPosition[posX][i];
-                    }
-                    if(prev_state === 3) invalid_cnt++;
+            var black = 0;
+
+            var now = chessPosition[posX][posY];
+
+            if(now!==-1) return true;
+            chessPosition[posX][posY] = (currentColor=="#000000") ? 1 : 0;
+
+
+            var x_min, x_max, y_min, y_max;
+            //掃過棋盤每個位置 確認這手合法.
+
+            //掃過4個方向( | - / \ )
+//----------------------直向----------------------
+
+        //================雙三判斷================
+            for(var R = posY; R < posY+4 && R < 14; R++){
+                black = 0;
+                var L;
+                for(L = R; L > R-4 && L > 0; L--){
+                    if(chessPosition[posX][L]===1)
+                        black++;
+                    if(black===3)
+                        break;
                 }
-                if(invalid_cnt===1){
-                    console.log("INVAILD MTFK!");
-                    return false;
+                if(black===3){
+                    if(chessPosition[posX][L-1]===-1 && (L-2===-1 || chessPosition[posX][L-2]!==1))
+                        if(chessPosition[posX][R+1]===-1 && ( R+2===15 || chessPosition[posX][R+2]!==1))
+                        {
+                            invalid_cnt1++;
+                            break;
+                        }
                 }
-                return true;
-                break;
-            case 1: //雙四
-                return true;
-                break;
-            case 2: //雙死四
-                return true;
-                break;
-            case 3: //六子
-                return true;
-                break;
             }
+        //===================================
+
+        //================雙四================
+            for(var R = posY; R < posY+5 && R < 14; R++){
+                black = 0;
+                var L;
+                for(L = R; L > R-5 && L > 0; L--){
+                    if(chessPosition[posX][L]===1)
+                        black++;
+                    if(black===4)
+                        break;
+                }
+                if(black===4){
+                    if(chessPosition[posX][L-1]===-1 && (L-2===-1 || chessPosition[posX][L-2]!==1))
+                        if(chessPosition[posX][R+1]===-1 && ( R+2===15 || chessPosition[posX][R+2]!==1))
+                        {
+                            invalid_cnt2++;
+                            break;
+                        }
+                }
+            }
+
+        //===================================
+
+        //================六子================
+        y_min = (posY - 5 > 0)  ? posY - 5 :  0;
+        y_max = (posY + 5 < 15) ? posY + 5 : 14;
+        black = 0;
+        for(var i = y_min ; i<=y_max ; i++)
+        {
+            if(chessPosition[posX][i]===1)
+                black++;
+            if(black===6){
+                chessPosition[posX][posY]=now;
+                return false;
+            }
+            if(chessPosition[posX][i]!==1)
+                black=0;
         }
+
+        //===================================
+
+//----------------------橫向----------------------
+        //================雙三判斷================
+            for(var R = posX; R < posX+4 && R < 14; R++){
+                black = 0;
+                var L;
+                for(L = R; L > R-4 && L > 0; L--){
+                    if(chessPosition[L][posY]===1)
+                        black++;
+                    if(black===3)
+                        break;
+                }
+                if(black===3){
+                    if(chessPosition[L-1][posY]===-1 && (L-2===-1 || chessPosition[L-2][posY]!==1))
+                        if(chessPosition[R+1][posY]===-1 && (R+2===15 || chessPosition[R+2][posY]!==1)){
+                            invalid_cnt1++;
+                            break;
+                        }
+                }
+            }
+
+        //===================================
+
+        //================雙四================
+            for(var R = posX; R < posX+5 && R < 14; R++){
+                black = 0;
+                var L;
+                for(L = R; L > R-5 && L > 0; L--){
+                    if(chessPosition[L][posY]===1)
+                        black++;
+                    if(black===4)
+                        break;
+                }
+                if(black===4){
+                    if(chessPosition[L-1][posY]===-1 && (L-2===-1 || chessPosition[L-2][posY]!==1))
+                        if(chessPosition[R+1][posY]===-1 && (R+2===15 || chessPosition[R+2][posY]!==1)){
+                            invalid_cnt2++;
+                            break;
+                        }
+                }
+            }
+        //===================================
+
+        //================六子================
+        x_min = (posX - 5 > 0)  ? posX - 5 :  0;
+        x_max = (posX + 5 < 15) ? posX + 5 : 14;
+        black = 0;
+        for(var i = x_min ; i<=x_max ; i++)
+        {
+            if(chessPosition[i][posY]===1)
+                black++;
+            if(black===6){
+                console.log("six problem!");
+                chessPosition[posX][posY]=now;
+                return false;
+            }
+            if(chessPosition[i][posY]!==1)
+                black=0;
+        }
+
+        //===================================
+
+
+//----------------------左斜(\)----------------------
+        //================雙三判斷================
+            for(var R = 0; R < 4 && posX+R < 14 && posY+R < 14; R++){
+                black = 0;
+                var L;
+                for(L = 0; L < 4 && posX-L > 0 && posY-L > 0; L++){
+                    if(chessPosition[posX+R-L][posY+R-L]===1)
+                        black++;
+                    if(black===3)
+                        break;
+                }
+                if(black===3){
+                    if(chessPosition[posX+R-L-1][posY+R-L-1]===-1 && ((posX+R-L-2===-1) || (posY+R-L-2===-1) || chessPosition[posX+R-L-2][posY+R-L-2]!==1))
+                        if(chessPosition[posX+R+1][posY+R+1]===-1 && ((posX+R+2===15) || (posY+R+2===15) || chessPosition[posX+R+2][posY+R+2]!==1)){
+                            invalid_cnt1++;
+                            break;
+                        }
+                }
+            }
+
+        //===================================
+
+        //================雙四================
+            for(var R = 0; R < 5 && posX+R < 14 && posY+R < 14; R++){
+                black = 0;
+                var L;
+                for(L = 0; L < 5 && posX-L > 0 && posY-L > 0; L++){
+                    if(chessPosition[posX+R-L][posY+R-L]===1)
+                        black++;
+                    if(black===4)
+                        break;
+                }
+                if(black===4){
+                    if(chessPosition[posX+R-L-1][posY+R-L-1]===-1 && ((posX+R-L-2===-1) || (posY+R-L-2===-1) || chessPosition[posX+R-L-2][posY+R-L-2]!==1))
+                        if(chessPosition[posX+R+1][posY+R+1]===-1 && ((posX+R+2===15) || (posY+R+2===15) || chessPosition[posX+R+2][posY+R+2]!==1)){
+                            invalid_cnt2++;
+                            break;
+                        }
+                }
+            }
+        //===================================
+
+        //================六子================
+        x_min = (posX - 5 > 0)  ? posX - 5 :  0;
+        x_max = (posX + 5 < 15) ? posX + 5 : 14;
+        black = 0;
+        for(var i = x_min ; i<=x_max ; i++)
+        {
+            if(chessPosition[i][posY]===1)
+                black++;
+            if(black===6){
+                chessPosition[posX][posY]=now;
+                return false;
+            }
+            if(chessPosition[i][posY]!==1)
+                black=0;
+        }
+
+        //===================================
+
+//----------------------右斜(/)----------------------
+        //================雙三判斷================
+            for(var R = 0; R < 4 && posX+R < 14 && posY-R > 0; R++){
+                black = 0;
+                var L;
+                for(L = 0; L < 4 && posX-L > 0 && posY+L < 14; L++){
+                    if(chessPosition[posX+R-L][posY-R+L]===1)
+                        black++;
+                    if(black===3)
+                        break;
+                }
+                if(black===3){
+                    if(chessPosition[posX+R-L-1][posY-R+L+1]===-1 && ((posX+R-L-2===-1) || (posY-R+L+2===15) || chessPosition[posX+R-L-2][posY-R+L+2]!==1))
+                        if(chessPosition[posX+R+1][posY-R-1]===-1 && ((posX+R+2===15) || (posY-R-2===-1) || chessPosition[posX+R+2][posY-R-2]!==1)){
+                            invalid_cnt1++;
+                            break;
+                        }
+                }
+            }
+
+        //===================================
+
+        //================雙四================
+            for(var R = 0; R < 5 && posX+R < 14 && posY-R > 0; R++){
+                black = 0;
+                var L;
+                for(L = 0; L < 5 && posX-L > 0 && posY+L < 14; L++){
+                    if(chessPosition[posX+R-L][posY-R+L]===1)
+                        black++;
+                    if(black===4)
+                        break;
+                }
+                if(black===4){
+                    if(chessPosition[posX+R-L-1][posY-R+L+1]===-1 && ((posX+R-L-2===-1) || (posY-R+L+2===15) || chessPosition[posX+R-L-2][posY-R+L+2]!==1))
+                        if(chessPosition[posX+R+1][posY-R-1]===-1 && ((posX+R+2===15) || (posY-R-2===-1) || chessPosition[posX+R+2][posY-R-2]!==1)){
+                            invalid_cnt2++;
+                            break;
+                        }
+                }
+            }
+        //===================================
+
+        //================六子================
+        x_min = (posX - 5 > 0)  ? posX - 5 :  0;
+        x_max = (posX + 5 < 15) ? posX + 5 : 14;
+        black = 0;
+        for(var i = x_min ; i<=x_max ; i++)
+        {
+            if(chessPosition[i][posY]===1)
+                black++;
+            if(black===6){
+                chessPosition[posX][posY]=now;
+                return false;
+            }
+            if(chessPosition[i][posY]!==1)
+                black=0;
+        }
+
+        //===================================
+
+//--------------------------------------------------
+
+            chessPosition[posX][posY]=now;
+            //invalid_cnt judge in here.
+            if(invalid_cnt1 >= 2){
+                return false;
+            }
+            if(invalid_cnt2 >1){
+                return false;
+            }
+            return true;
+        }
+        //end of check()
     }
 }
 
