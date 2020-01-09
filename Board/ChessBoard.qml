@@ -8,7 +8,7 @@ import  "packetCreate.js" as Packet
 
 Rectangle{
     property variant chessPosition : []     // -1: undefine ,0: white ,1: black
-    property variant winner
+    property variant win_player : ""
     id     : background
     width  : parent.width
     height : parent.height
@@ -162,92 +162,6 @@ Rectangle{
             }else{
                 console.log("There has been a chess")
             }
-        }
-        function win(posX,posY){
-            var x_min = posX-4 >= 0 ? posX - 4 :  0;
-            var x_max = posX+4 < 15 ? posX + 4 : 14;
-            var y_min = posY-4 >= 0 ? posY - 4 :  0;
-            var y_max = posY+4 < 15 ? posY + 4 : 14;
-            var black_line = 0;
-            var white_line = 0;
-            //直
-            for(var i = y_min ; i <= y_max ; i++){
-                if(chessPosition[posX][i]===1)
-                    black_line++;
-                else
-                    black_line = 0;
-                if(chessPosition[posX][i]===0)
-                    white_line++;
-                else
-                    white_line = 0;
-                if(black_line===5){
-                    winner = "black";
-                    return true;
-                }
-                else if(white_line===5){
-                    winner = "white";
-                    return true;
-                }
-            }
-            //橫
-            for(var i = x_min ; i <= x_max ; i++){
-                if(chessPosition[i][posY]===1)
-                    black_line++;
-                else
-                    black_line = 0;
-                if(chessPosition[i][posY]===0)
-                    white_line++;
-                else
-                    white_line = 0;
-                if(black_line===5){
-                    winner = "black";
-                    return true;
-                }
-                else if(white_line===5){
-                    winner = "white";
-                    return true;
-                }
-            }
-            var temp  = (x_max-x_min) > (y_max-y_min) ?  (y_max-y_min) : (x_max-x_min);
-            //左斜(\)
-            for(var i = 0 ; i<=temp; i++){
-                if(chessPosition[x_min+i][y_min+i]===1)
-                    black_line++;
-                else
-                    black_line = 0;
-                if(chessPosition[x_min+i][y_min+i]===0)
-                    white_line++;
-                else
-                    white_line = 0;
-                if(black_line===5){
-                    winner = "black";
-                    return true;
-                }
-                else if(white_line===5){
-                    winner = "white";
-                    return true;
-                }
-            }
-            //右斜(/)
-            for(var i = 0 ; i<=temp; i++){
-                if(chessPosition[x_min+i][y_min-i]===1)
-                    black_line++;
-                else
-                    black_line = 0;
-                if(chessPosition[x_min+i][y_min-i]===0)
-                    white_line++;
-                else
-                    white_line = 0;
-                if(black_line===5){
-                    winner = "black";
-                    return true;
-                }
-                else if(white_line===5){
-                    winner = "white";
-                    return true;
-                }
-            }
-            return false;
         }
 
         function forbidden(posX,posY){
@@ -563,12 +477,101 @@ Rectangle{
             console.log("There has been a chess")
         }
     }
+
+    function win(posX,posY){
+
+        var x_min = posX-4 >= 0 ? posX - 4 :  0;
+        var x_max = posX+4 < 15 ? posX + 4 : 14;
+        var y_min = posY-4 >= 0 ? posY - 4 :  0;
+        var y_max = posY+4 < 15 ? posY + 4 : 14;
+        var black_line = 0;
+        var white_line = 0;
+        //直
+        for(var i = y_min ; i <= y_max ; i++){
+            if(chessPosition[posX][i]===1)
+                black_line++;
+            else
+                black_line = 0;
+            if(chessPosition[posX][i]===0)
+                white_line++;
+            else
+                white_line = 0;
+            if(black_line===5){
+                win_player = "black";
+                return true;
+            }
+            else if(white_line===5){
+                win_player = "white";
+                return true;
+            }
+        }
+        //橫
+        for(var i = x_min ; i <= x_max ; i++){
+            if(chessPosition[i][posY]===1)
+                black_line++;
+            else
+                black_line = 0;
+            if(chessPosition[i][posY]===0)
+                white_line++;
+            else
+                white_line = 0;
+            if(black_line===5){
+                win_player = "black";
+                return true;
+            }
+            else if(white_line===5){
+                win_player = "white";
+                return true;
+            }
+        }
+        var temp  = (x_max-x_min) > (y_max-y_min) ?  (y_max-y_min) : (x_max-x_min);
+        //左斜(\)
+        for(var i = 0 ; i<=temp; i++){
+            if(chessPosition[x_min+i][y_min+i]===1)
+                black_line++;
+            else
+                black_line = 0;
+            if(chessPosition[x_min+i][y_min+i]===0)
+                white_line++;
+            else
+                white_line = 0;
+            if(black_line===5){
+                win_player = "black";
+                return true;
+            }
+            else if(white_line===5){
+                win_player = "white";
+                return true;
+            }
+        }
+        //右斜(/)
+        for(var i = 0 ; i<=temp; i++){
+            if(chessPosition[x_min+i][y_min-i]===1)
+                black_line++;
+            else
+                black_line = 0;
+            if(chessPosition[x_min+i][y_min-i]===0)
+                white_line++;
+            else
+                white_line = 0;
+            if(black_line===5){
+                win_player = "black";
+                return true;
+            }
+            else if(white_line===5){
+                win_player = "white";
+                return true;
+            }
+        }
+        return false;
+    }
+
     function setMouse(status){
         mouse.enabled = status
     }
     function overgame(){
         gameover.z = 30
-        winner.text = (winner == myColor) ? myname : othername
+        winner.text = (win_player == myColor) ? myname : othername
     }
 }
 

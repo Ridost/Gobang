@@ -109,7 +109,7 @@ Window {
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
                         pageloader.item.createChess(posX,posY)
-                        if( win(posX,posY) ) {
+                        if( pageloader.item.win(posX,posY) ) {
                             var str = Packet.packet("gameover","","",id,posX,posY)
                             tcp.sendMsg(str)
                             overgame()
@@ -119,7 +119,7 @@ Window {
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
                         pageloader.item.createChess(posX,posY)
-                        if( win(posX,posY) ) {
+                        if( pageloader.item.win(posX,posY) ) {
                             var str = Packet.packet("gameover","","",id,posX,posY)
                             tcp.sendMsg(str)
                             overgame()
