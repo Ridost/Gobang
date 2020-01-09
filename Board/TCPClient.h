@@ -23,6 +23,8 @@ public slots:
 
 signals:
     void showMsg(const QString &msg);
+    void connectFailed();
+    void connectSuccess();
 private:
     QTcpSocket *m_tcpsocket;
     QString m_ip;

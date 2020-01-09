@@ -4,5 +4,11 @@
         <file>SelectedFrame.qml</file>
         <file>Chess.qml</file>
         <file>chessCreation.js</file>
+        <file>Login.qml</file>
+        <file>ChessBoard.qml</file>
+        <file>client.js</file>
+        <file>Lobby.qml</file>
+        <file>packetCreate.js</file>
+        <file>PlayerCard.qml</file>
     </qresource>
 </RCC>
