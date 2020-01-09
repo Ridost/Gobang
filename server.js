@@ -165,12 +165,13 @@ server.on('connection', (socket)=>{
                     online_players[id].state = "waiting"
                 }
                 if( waiting_queue.length >= 2 ){
-                    waiting_queue.slice(waiting_queue.indexOf(id),1)
-    
+                    waiting_queue.splice(waiting_queue.indexOf(id),1)
                     table.player1 = online_players[id].name
                     var player2_id=waiting_queue.shift()
                     table.player2 = online_players[player2_id].name
                     table.turn = "black"
+                    //for both win check
+                    table.check = true
                     //init board
                     //table.board = clean_board
                     all_table[tableid] = table
@@ -193,7 +194,7 @@ server.on('connection', (socket)=>{
 
         function unpairing(){
             if( waiting_queue.find(id=>id == recv_pack["id"]) != undefined ){
-                waiting_queue.slice(waiting_queue.indexOf(recv_pack["id"]),1)
+                waiting_queue.splice(waiting_queue.indexOf(recv_pack["id"]),1)
                 online_players[recv_pack["id"]].state = "online"
             }
             send_pack.type = "unpairing"
@@ -232,10 +233,13 @@ server.on('connection', (socket)=>{
         function gameover () {
             var id = recv_pack["id"]
             var tid = online_players[id].state
+            all_table[tid].check = !all_table[tid].check
             online_players[id].state = "online"
-            delete all_table[tid]
+            if( all_table[tid] != undefined && all_table[tid].check)
+                delete all_table[tid]
             send_pack.type = "gameover"
             socket.write(JSON.stringify(send_pack), ()=>{console.log( "Game over" )})
+            console.log(waiting_queue.length)
         }
     })
 
