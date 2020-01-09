@@ -100,9 +100,9 @@ Window {
                         var posY = obj['table']['lasty']
                     }
                     if(obj['table']['turn'] !== myColor){
-                        main.focus = false
+                        window.active = false
                         waiting.start()
-                    }else main.focus = true
+                    }else window.active = true
                     break;
                 default:
                     break;
@@ -126,7 +126,7 @@ Window {
         anchors.top : parent.top
         anchors.horizontalCenter: parent.horizontalCenter
 
-        source : "ChessBoard.qml"
+        source : "Login.qml"
     }
     PlayerCard{
         id    : player1

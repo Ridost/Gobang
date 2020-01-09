@@ -102,6 +102,7 @@ Rectangle{
                 var posY = Math.round( (selectedframe.y+(chessBoard.height/32)) / (chessBoard.height/16)) -1
                 if(chessBoard.forbidden(posX,posY)){
                     var str = Packet.packet("play","","",id,posX,posY)
+                    console.log("Sent:" ,str)
                     tcp.sendMsg(str)
                     chessBoard.createChess(posX,posY)
                 }

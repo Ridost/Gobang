@@ -6,7 +6,6 @@ Rectangle {
     opacity : 0.7
     Text{
         id      : username
-        text    : "a1055536"
         width   : parent.width * 0.7
         height  : parent.height * 0.5
         font.bold       : true
