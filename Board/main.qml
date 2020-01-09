@@ -109,12 +109,13 @@ Window {
                 return false;
             }
             //禁手(雙三、雙四、雙死四、六子)
-            for(var i = 0; i<4 ; i++){
-                if(!check(i,posX,posY)){
+            var color = chessPosition[posX][posY] = (currentColor=="#000000") ? 1 : 0;
+            console.log(color);
+            if(color){
+                if(!check(posX,posY)){
                     return false;
                 }
             }
-
             return true;
         }
 
@@ -127,41 +128,55 @@ Window {
             return true;
         }
 
-        function check(way,posX,posY){
-            switch (way){
-            case 0: //雙三
-                //直
-                var invalid_cnt = 0;
-                var prev_state = chessPosition[posX][0];
-                for(var i = 1; i < 14; i++){
-                    if(chessPosition[posX][i]===1 && prev_state > 0 ){
-                        prev_state++;
+        function check(posX,posY){
+            //cnt1-> 活三 cnt2-> 活四 cnt3-> 死四 cnt4->六子
+            var invalid_cnt1 = 0;
+            var invalid_cnt2 = 0;
+            var invalid_cnt3 = 0;
+            var invalid_cnt4 = 0;
+            for(var way = 0;way<4;way++){
+                switch (way){
 
-                    }
-                    else if(prev_state===-1 &&　chessPosition[posX][i]){
-                        prev_state = 1;
-                    }
-                    else if(chessPosition[posX][i]!==1){
-                        prev_state = chessPosition[posX][i];
-                    }
-                    if(prev_state === 3) invalid_cnt++;
+                    case 0: //直
+                        var prev_state = chessPosition[posX][0];
+                        var black_line = 0;
+                        var now = chessPosition[posX][posY];
+                        chessPosition[posX][posY] = 1;
+
+
+                        for(var i = 1; i < 14; i++){
+                            if(chessPosition[posX][i] === 1){
+                                black_line++;
+                                console.log("黑子數:",black_line);
+                            } //黑子連續個數
+
+                            if(chessPosition[posX][i] === 0){
+                                black_line = 0;
+                            }
+
+                            prev_state = chessPosition[posX][i];
+
+                            if(black_line === 3) invalid_cnt1++;
+                            if(black_line === 4) invalid_cnt2++;
+                            if(black_line === 6) invalid_cnt4++;
+                        }
+
+                        chessPosition[posX][posY] = now;
+                        break;
+
+                    case 1: // 橫
+                        break;
+
+                    case 2: // 斜(\)
+                        break;
+                    case 3: // 斜(/)
+                        break;
                 }
-                if(invalid_cnt===1){
-                    console.log("INVAILD MTFK!");
-                    return false;
-                }
-                return true;
-                break;
-            case 1: //雙四
-                return true;
-                break;
-            case 2: //雙死四
-                return true;
-                break;
-            case 3: //六子
-                return true;
-                break;
             }
+            //invalid_cnt judge in here.
+            if(invalid_cnt4) console.log("有六子");
+            if(invalid_cnt1) console.log("有活三");
+            return true;
         }
     }
 }
