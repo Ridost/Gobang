@@ -1,6 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
 import "chessCreation.js" as MyScript
+import QtQuick.Controls 2.0
+import com.TCPClient 1.0
 
 Window {
     property color currentColor: "black"
@@ -13,6 +15,17 @@ Window {
            chessPosition.push([-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1])
         }
     }
+    TCP{
+        id:tcp
+    }
+    Button{
+        onClicked: {
+            tcp.createTCPConnect()
+            tcp.sendMsg("123")
+        }
+    }
+
+
     Rectangle{
         id: chessBoard
         height  : parent.height*0.9
