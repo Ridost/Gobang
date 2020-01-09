@@ -92,17 +92,17 @@ Window {
                 case "playing":
                     console.log(obj['table']['turn'],currentColor)
                     if(obj['table']['turn'] === "white" && currentColor == "#000000"){
-                        currentColor = "white"
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
-                        console.log("create1")
                         pageloader.item.createChess(posX,posY)
+                        currentColor = "white"
+                        console.log("create1")
                     }else if(obj['table']['turn'] === "black" && currentColor == "#ffffff"){
-                        currentColor = "black"
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
                         console.log("create2")
                         pageloader.item.createChess(posX,posY)
+                        currentColor = "black"
                     }
                     if(obj['table']['turn'] !== myColor){
                        // main.active = false
