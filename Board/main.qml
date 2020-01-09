@@ -137,6 +137,9 @@ Window {
                         pageloader.item.setMouse(true)
                     }
                     break;
+                case "gameover":
+                       pageloader.item.overgame()
+                    break;
                 default:
                     break;
 

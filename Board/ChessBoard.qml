@@ -201,7 +201,7 @@ Rectangle{
 
             var now = chessPosition[posX][posY];
 
-            if(now!==-1) return true;
+            if(now!==-1) return false;
             chessPosition[posX][posY] = (currentColor=="#000000") ? 1 : 0;
 
 
@@ -487,6 +487,7 @@ Rectangle{
         var black_line = 0;
         var white_line = 0;
         //直
+        console.log(chessPosition[posX][posY])
         for(var i = y_min ; i <= y_max ; i++){
             if(chessPosition[posX][i]===1)
                 black_line++;
