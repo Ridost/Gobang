@@ -39,7 +39,7 @@ Rectangle{
             width : parent.width * 0.3
             height: parent.height * 0.05
             font.pointSize          : 12
-            text                    : "a1055536"
+            text                    : "a1055504"
             placeholderText         : "account"
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -48,7 +48,7 @@ Rectangle{
             width : parent.width * 0.3
             height: parent.height * 0.05
             font.pointSize          : 12
-            text                    : "ggininder"
+            text                    : "ggdadader"
             placeholderText         : "password"
             anchors.horizontalCenter: parent.horizontalCenter
         }

@@ -116,6 +116,17 @@ Rectangle{
             width   : chessBoard.width/16
 
         }
+        Timer{
+            id : delay
+            interval: 1000
+            repeat: false
+            onTriggered: {
+                console.log("WIN!!!")
+                var str = Packet.packet("gameover","","",id,posX,posY)
+                tcp.sendMsg(str)
+                overgame()
+            }
+        }
         MouseArea{
             id:mouse
             hoverEnabled        : true
@@ -129,10 +140,7 @@ Rectangle{
                     tcp.sendMsg(str)
                     createChess(posX,posY)
                     if( win(posX,posY) ) {
-                        console.log("WIN!!!")
-                        var str = Packet.packet("gameover","","",id,posX,posY)
-                        tcp.sendMsg(str)
-                        overgame()
+                        delay.start()
                     }
 
                 }
