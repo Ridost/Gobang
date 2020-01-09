@@ -10,7 +10,7 @@ Window {
     property var id
     property var username
     property var myColor
-    property color currentColor : "#000000"
+    property color currentColor : "black"
 
     id : main
     width   : 1280
@@ -90,14 +90,14 @@ Window {
                     break;
                 case "playing":
                     console.log(obj['table']['turn'],currentColor)
-                    if(obj['table']['turn'] === "white" && currentColor === "#000000"){
-                        currentColor = "#ffffff"
+                    if(obj['table']['turn'] === "white" && currentColor == "#000000"){
+                        currentColor = "white"
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
                         console.log("create1")
                         chessBoard.createChess(posX,posY)
-                    }else if(obj['table']['turn'] === "black" && currentColor === "#ffffff"){
-                        currentColor = "#000000"
+                    }else if(obj['table']['turn'] === "black" && currentColor == "#ffffff"){
+                        currentColor = "black"
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
                         console.log("create2")
