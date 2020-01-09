@@ -21,14 +21,10 @@ Rectangle{
     Button{
         anchors.left: chessBoard.right
         anchors.top : chessBoard.top
-        text : "DeleteAllChess"
+        text : "Forfeit"
         onClicked: {
-            MyScript.deleteAllChess()
-            for(var i=0 ; i<15 ; i++){
-                for(var j =0 ; j<15 ; j++)
-                    chessPosition[i][j] = -1;
-            }
-            currentColor = "black"
+            var str = Packet.packet("forfeit")
+            tcp.sendMsg(str)
         }
     }
     Rectangle{

@@ -1,7 +1,6 @@
 import QtQuick 2.0
 
 Rectangle {
-    id      : playerCard
     color   : "gray"
     opacity : 0.7
     Text{
