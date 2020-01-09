@@ -36,7 +36,7 @@ Rectangle{
             Text{
                 id : winner
                 font.bold: true
-                font.pointSize: 100
+                font.pointSize: 70
                 fontSizeMode: Text.Fit
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -548,11 +548,11 @@ Rectangle{
         }
         //右斜(/)
         for(var i = 0 ; i<=temp; i++){
-            if(chessPosition[x_min+i][y_min-i]===1)
+            if(chessPosition[x_min+i][y_max-i]===1)
                 black_line++;
             else
                 black_line = 0;
-            if(chessPosition[x_min+i][y_min-i]===0)
+            if(chessPosition[x_min+i][y_max-i]===0)
                 white_line++;
             else
                 white_line = 0;
