@@ -11,9 +11,13 @@ Rectangle {
         font.bold       : true
         font.pointSize  : 100
         fontSizeMode    : Text.Fit
+        text            : ""
         horizontalAlignment : Text.AlignHCenter
         verticalAlignment   : Text.AlignVCenter
         anchors.top         : parent.top
         anchors.horizontalCenter: parent.horizontalCenter
+    }
+    function setUserName(name){
+        username.text = name
     }
 }

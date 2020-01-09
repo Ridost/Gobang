@@ -86,13 +86,13 @@ Window {
                     busy.running = false
                     pageloader.source = "ChessBoard.qml"
                     if( obj['table']['player1'] === username)   {
-                        player1.username.text = username
-                        player2.username.text = obj['table']['player2']
+                        player1.setUsername(username)
+                        player2.setUsername(obj['table']['player2'])
                         myColor = "black"
                     }
                     else {
-                        player1.username.text = username
-                        player2.username.text = obj['table']['player1']
+                        player1.setUsername(username)
+                        player2.setUsername(obj['table']['player1'])
                         myColor = "white"
                     }
                     game.start()
