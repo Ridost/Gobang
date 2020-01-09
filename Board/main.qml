@@ -4,205 +4,144 @@ import "chessCreation.js" as MyScript
 import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.1
 import com.TCPClient 1.0
+import "packetCreate.js" as Packet
 
 Window {
-    property color currentColor: "black"
-    property variant chessPosition : []     // -1: undefine ,0: white ,1: black
-    visible : true
+    property var id
+    property var username
+    property var myColor
+    property color currentColor
+
+    id : main
     width   : 1280
     height  : 960
-    Component.onCompleted: {
-        for(var i=0;i<15;i++){
-           chessPosition.push([-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1])
+    visible : true
+    color   : "green"
+    Timer{
+        id          : reconnect
+        repeat      : false
+        interval    : 3000
+        onTriggered : tcp.createTCPConnect()
+    }
+    Timer{
+        id          : pair
+        repeat      : false
+        interval    : 3000
+        onTriggered : {
+            console.log("pairing")
+            var str = Packet.packet("pairing",username,"",id)
+            tcp.sendMsg(str)
+        }
+    }
+    Timer{
+        id          : game
+        repeat      : false
+        interval    : 1000
+        onTriggered : {
+            console.log("game")
+            var str = Packet.packet("idle",username,"",id)
+            tcp.sendMsg(str)
+        }
+    }
+    Timer{
+        id          : waiting
+        repeat      : false
+        interval    : 1000
+        onTriggered : {
+            console.log("waiting")
+            var str = Packet.packet("idle",username,"",id)
+            tcp.sendMsg(str)
         }
     }
     TCP{
-        id:tcp
-    }
-    Button{
-        text : "Connect"
-        onClicked: {
+        id : tcp
+        Component.onCompleted: {
             tcp.createTCPConnect()
-            tcp.sendMsg("123")
+        }
+        onConnectFailed: {
+            busy.running = true;
+            reconnect.start()
+        }
+        onConnectSuccess: busy.running = false
+        onShowMsg: {
+            console.log(msg)
+            var obj = JSON.parse(msg)
+            var type = obj['type'];
+            switch(type){
+                case "OK":
+                    id = obj['id'];
+                    console.log(id);
+                    pageloader.source = "Lobby.qml"
+                    break;
+                case "pairing":
+                    busy.running = true
+                    pair.start()
+                    break;
+                case "unpairing":
+                    busy.running = false
+                    pair.stop()
+                    break;
+                case "start":
+                    busy.running = false
+                    pageloader.source = "ChessBoard.qml"
+                    if( obj['table']['player1'] === username)   myColor = "black"
+                    else myColor = "white"
+                    game.start()
+                    break;
+                case "playing":
+                    if(obj['table']['turn'] === "white" && currentColor === "#000000"){
+                        currentColor = "#ffffff"
+                        var posX = obj['table']['lastx']
+                        var posY = obj['table']['lasty']
+                        chessBoard.createChess(posX,posY)
+                    }else if(obj['table']['turn'] === "black" && currentColor === "#ffffff"){
+                        currentColor = "#000000"
+                        var posX = obj['table']['lastx']
+                        var posY = obj['table']['lasty']
+                    }
+                    if(obj['table']['turn'] !== myColor){
+                        waiting.start()
+                    }
+                    break;
+                default:
+                    break;
+
+            }
         }
     }
-    Button{
-        anchors.left: chessBoard.right
-        anchors.top : chessBoard.top
-        text : "DeleteAllChess"
-        onClicked: {
-            MyScript.deleteAllChess()
-            for(var i=0 ; i<15 ; i++){
-                for(var j =0 ; j<15 ; j++)
-                    chessPosition[i][j] = -1;
-            }
-            currentColor = "black"
-        }
+    BusyIndicator{
+        id    : busy
+        z     : 1
+        width : parent.width /10
+        height: parent.height/10
+        anchors.centerIn: parent
+        running         : false
     }
-    Rectangle{
-        id  : message
-        width: chessBoard.width/8
-        height: chessBoard.height/36
-        opacity: 0.7
-        state: "Close"
-        color: "coral"
-        x : chessBoard.x + chessBoard.width/2
-        y : chessBoard.y + chessBoard.height/2
-        z : 0
-        Text{
-            text: "不能下這裡啦"
-            font.bold: true
-            font.pointSize: 10
-            color: "black"
-        }
-        PropertyAnimation{
-            id : animation
-            target: message
-            duration:  3000
-            property: "z";
-            from : 30;
-            to   : 0;
-        }
+    Loader  {
+        id    : pageloader
+        width : parent.width * 0.7
+        height: parent.height
+
+        anchors.top : parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        source : "ChessBoard.qml"
+    }
+    PlayerCard{
+        id    : player1
+        width : parent.width * 0.15
+        height: parent.height
+
+        anchors.top : parent.top
+        anchors.left: parent.left
     }
 
-    Rectangle{
-        id: chessBoard
-        height  : parent.height*0.9
-        width   : height
-        color   : "#cd853f"
-        anchors.verticalCenter  : parent.verticalCenter
-        anchors.left            : parent.left
-        anchors.leftMargin      : parent.height*0.05
+    PlayerCard{
+        id    : player2
+        width : parent.width * 0.15
+        height: parent.height
 
-        Column{
-            anchors.verticalCenter  : chessBoard.verticalCenter
-            anchors.left            : chessBoard.left
-            anchors.leftMargin      : chessBoard.width/16
-            Repeater{
-                model:14
-                Row{
-                     Repeater{
-                        model:14
-                        Rectangle{
-                            height      : chessBoard.height/16
-                            width       : chessBoard.width/16
-                            color       : "#cd853f"
-                            border.width: 1
-                        }
-                     }
-                }
-            }
-        }
-
-        SelectedFrame{
-            id: selectedframe
-            border  : 2
-            height  : chessBoard.height/16
-            width   : chessBoard.width/16
-
-        }
-        MouseArea{
-            id:mouse
-            hoverEnabled        : true
-            anchors.fill        : parent
-            onPositionChanged   : relocation()
-            onClicked           : {
-                var posX = Math.round( (selectedframe.x+(chessBoard.width/32 )) / (chessBoard.width /16)) -1
-                var posY = Math.round( (selectedframe.y+(chessBoard.height/32)) / (chessBoard.height/16)) -1
-                if(chessBoard.forbidden(posX,posY)){
-                    chessBoard.createChess(posX,posY)
-                }
-            }
-            function relocation(){
-                var mouse_x     = mouse.mouseX
-                var mouse_y     = mouse.mouseY
-                var framewidth  = chessBoard.width /16
-                var frameheight = chessBoard.height/16
-
-                if(mouse_x >= chessBoard.width*15/16)   mouse_x = chessBoard.width*15/16
-                else if(mouse_x <= chessBoard.width/16) mouse_x = chessBoard.width/16
-
-                if(mouse_y >= chessBoard.height*15/16)  mouse_y = chessBoard.height*15/16
-                else if(mouse_y <= chessBoard.height/16)mouse_y = chessBoard.height/16
-
-                selectedframe.x = Math.floor(((mouse_x - framewidth /2)   / framewidth   ))  * framewidth  + framewidth /2
-                selectedframe.y = Math.floor(((mouse_y - frameheight/2)   / frameheight  ))  * frameheight + frameheight/2
-
-            }
-        }
-
-        function createChess(posX,posY){
-            if(chessPosition[posX][posY]===-1 ){
-                chessPosition[posX][posY] = (currentColor=="#000000") ? 1 : 0
-                MyScript.createChess(posX, posY, currentColor)
-                currentColor = (currentColor=="#000000") ? "white" : "black"
-            }else{
-                console.log("There has been a chess")
-            }
-        }
-
-        function forbidden(posX,posY){
-            //首子必在天元(7,7)
-            if(board_empty()){
-                createChess(7,7);
-                return false;
-            }
-            //禁手(雙三、雙四、雙死四、六子)
-            for(var i = 0; i<4 ; i++){
-                if(!check(i,posX,posY)){
-                    message.x = selectedframe.x
-                    message.y = selectedframe.y
-                    animation.running = true;
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        function board_empty(){
-            for(var i=0 ; i<15 ; i++){
-                for(var j =0 ; j<15 ; j++)
-                    if(chessPosition[i][j]!==-1)
-                        return false;
-            }
-            return true;
-        }
-        function check(way,posX,posY){
-            switch (way){
-            case 0: //雙三
-                //直
-                var invalid_cnt = 0;
-                var prev_state = chessPosition[posX][0];
-                for(var i = 1; i < 14; i++){
-                    if(chessPosition[posX][i]===1 && prev_state > 0 ){
-                        prev_state++;
-
-                    }
-                    else if(prev_state===-1 &&　chessPosition[posX][i]){
-                        prev_state = 1;
-                    }
-                    else if(chessPosition[posX][i]!==1){
-                        prev_state = chessPosition[posX][i];
-                    }
-                    if(prev_state === 3) invalid_cnt++;
-                }
-                if(invalid_cnt===1){
-                    console.log("INVAILD MTFK!");
-                    return false;
-                }
-                return true;
-                break;
-            case 1: //雙四
-                return true;
-                break;
-            case 2: //雙死四
-                return true;
-                break;
-            case 3: //六子
-                return true;
-                break;
-            }
-        }
+        anchors.top  : parent.top
+        anchors.right: parent.right
     }
 }

@@ -1,6 +1,8 @@
 #include "TCPClient.h"
 #include <QDebug>
-
+#include<QJsonObject>
+#include<QJsonDocument>
+#include<QString>
 
 TCPClient::TCPClient()
 {
@@ -14,7 +16,7 @@ TCPClient::TCPClient()
 
 TCPClient::~TCPClient()
 {
-    m_tcpsocket->deleteLater();
+    m_tcpsocket->close();
 }
 
 void TCPClient::setIP(const QString ip)
@@ -46,15 +48,23 @@ void TCPClient::createTCPConnect()
 
     if(!m_tcpsocket->waitForConnected(3000)){
         qDebug()<<"Connected failed";
-        return;
-    }
+        emit connectFailed();
+    }else   emit connectSuccess();
 }
 
 void TCPClient::sendMsg(const QString msg)
 {
+    /*
+    QJsonObject JsonMsg
+    {
+        {"Account", msg.split(',')[0]},
+        {"Password",msg.split(',')[1]}
+    };
+    QJsonDocument Doc(JsonMsg);
+    QByteArray ba = Doc.toJson();
+    */
     m_tcpsocket->write(msg.toUtf8());
     m_tcpsocket->flush();
-    m_tcpsocket->close();
 }
 
 
