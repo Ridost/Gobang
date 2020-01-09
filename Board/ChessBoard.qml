@@ -8,6 +8,7 @@ import  "packetCreate.js" as Packet
 
 Rectangle{
     property variant chessPosition : []     // -1: undefine ,0: white ,1: black
+    property variant winner
     id     : background
     width  : parent.width
     height : parent.height
@@ -16,6 +17,31 @@ Rectangle{
     Component.onCompleted: {
         for(var i=0;i<15;i++){
            chessPosition.push([-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1])
+        }
+    }
+    Rectangle{
+        id : gameover
+        anchors.fill: parent
+        z      : -1
+        color  : "gray"
+        opacity: 0.5
+        Rectangle{
+            id : header
+            color: "white"
+            width:  parent.width
+            height: parent.height /10
+            anchors.top: parent.top
+            anchors.topMargin: parent.height * 0.05
+            anchors.left: parent.left
+            Text{
+                id : winner
+                font.bold: true
+                font.pointSize: 100
+                fontSizeMode: Text.Fit
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                anchors.centerIn: parent
+            }
         }
     }
     Button{
@@ -104,9 +130,14 @@ Rectangle{
                 var posY = Math.round( (selectedframe.y+(chessBoard.height/32)) / (chessBoard.height/16)) -1
                 if(chessBoard.forbidden(posX,posY)){
                     var str = Packet.packet("play","","",id,posX,posY)
-                    console.log("Sent:" ,str)
                     tcp.sendMsg(str)
                     createChess(posX,posY)
+                    if( win(posX,posY) ) {
+                        var str = Packet.packet("gameover","","",id,posX,posY)
+                        tcp.sendMsg(str)
+                        overgame()
+                    }
+
                 }
             }
             function relocation(){
@@ -153,7 +184,14 @@ Rectangle{
                     white_line++;
                 else
                     white_line = 0;
-                if(black_line===5 || white_line===5) return true;
+                if(black_line===5){
+                    winner = "black";
+                    return true;
+                }
+                else if(white_line===5){
+                    winner = "white";
+                    return true;
+                }
             }
             //橫
             for(var i = x_min ; i <= x_max ; i++){
@@ -165,7 +203,14 @@ Rectangle{
                     white_line++;
                 else
                     white_line = 0;
-                if(black_line===5 || white_line===5) return true;
+                if(black_line===5){
+                    winner = "black";
+                    return true;
+                }
+                else if(white_line===5){
+                    winner = "white";
+                    return true;
+                }
             }
             var temp  = (x_max-x_min) > (y_max-y_min) ?  (y_max-y_min) : (x_max-x_min);
             //左斜(\)
@@ -178,7 +223,14 @@ Rectangle{
                     white_line++;
                 else
                     white_line = 0;
-                if(black_line===5 || white_line===5) return true;
+                if(black_line===5){
+                    winner = "black";
+                    return true;
+                }
+                else if(white_line===5){
+                    winner = "white";
+                    return true;
+                }
             }
             //右斜(/)
             for(var i = 0 ; i<=temp; i++){
@@ -190,7 +242,14 @@ Rectangle{
                     white_line++;
                 else
                     white_line = 0;
-                if(black_line===5 || white_line===5) return true;
+                if(black_line===5){
+                    winner = "black";
+                    return true;
+                }
+                else if(white_line===5){
+                    winner = "white";
+                    return true;
+                }
             }
             return false;
         }
@@ -510,6 +569,10 @@ Rectangle{
     }
     function setMouse(status){
         mouse.enabled = status
+    }
+    function overgame(){
+        gameover.z = 30
+        winner.text = (winner == myColor) ? myname : othername
     }
 }
 

@@ -11,6 +11,8 @@ Window {
     property var username
     property var myColor
     property color currentColor : "black"
+    property var myname
+    property var othername
 
     id : main
     width   : 1280
@@ -86,13 +88,17 @@ Window {
                     busy.running = false
                     pageloader.source = "ChessBoard.qml"
                     if( obj['table']['player1'] === username)   {
-                        player1.setUsername(username)
-                        player2.setUsername(obj['table']['player2'])
+                        player1.setUserName(username)
+                        player2.setUserName(obj['table']['player2'])
+                        myname = username
+                        othername = obj['table']['player2']
                         myColor = "black"
                     }
                     else {
-                        player1.setUsername(username)
-                        player2.setUsername(obj['table']['player1'])
+                        player1.setUserName(username)
+                        player2.setUserName(obj['table']['player1'])
+                        myname = username
+                        othername = obj['table']['player1']
                         myColor = "white"
                     }
                     game.start()
@@ -103,12 +109,21 @@ Window {
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
                         pageloader.item.createChess(posX,posY)
+                        if( win(posX,posY) ) {
+                            var str = Packet.packet("gameover","","",id,posX,posY)
+                            tcp.sendMsg(str)
+                            overgame()
+                        }
                         currentColor = "white"
                     }else if(obj['table']['turn'] === "black" && currentColor == "#ffffff"){
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
-                        console.log("create2")
                         pageloader.item.createChess(posX,posY)
+                        if( win(posX,posY) ) {
+                            var str = Packet.packet("gameover","","",id,posX,posY)
+                            tcp.sendMsg(str)
+                            overgame()
+                        }
                         currentColor = "black"
                     }
                     if(obj['table']['turn'] !== myColor){
