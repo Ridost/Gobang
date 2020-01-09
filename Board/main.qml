@@ -122,7 +122,7 @@ Window {
                     game.start()
                     break;
                 case "playing":
-                    console.log(obj['table']['turn'],currentColor)
+                    if(obj['table'] === undefined ) break;
                     if(obj['table']['forfeit'] === othername ){
                         var str = Packet.packet("forfeit_confirm","","",id)
                         tcp.sendMsg(str)
