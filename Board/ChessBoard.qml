@@ -129,6 +129,7 @@ Rectangle{
                     tcp.sendMsg(str)
                     createChess(posX,posY)
                     if( win(posX,posY) ) {
+                        console.log("WIN!!!")
                         var str = Packet.packet("gameover","","",id,posX,posY)
                         tcp.sendMsg(str)
                         overgame()
@@ -201,7 +202,7 @@ Rectangle{
 
             var now = chessPosition[posX][posY];
 
-            if(now!==-1) return true;
+            if(now!==-1) return false;
             chessPosition[posX][posY] = (currentColor=="#000000") ? 1 : 0;
 
 
@@ -479,7 +480,7 @@ Rectangle{
     }
 
     function win(posX,posY){
-
+        console.log(chessPosition)
         var x_min = posX-4 >= 0 ? posX - 4 :  0;
         var x_max = posX+4 < 15 ? posX + 4 : 14;
         var y_min = posY-4 >= 0 ? posY - 4 :  0;

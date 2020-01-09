@@ -56,6 +56,14 @@ Window {
             tcp.sendMsg(str)
         }
     }
+    Timer{
+        id          : exiting
+        repeat      : false
+        interval    : 3000
+        onTriggered: {
+            pageloader.source = "Lobby.qml"
+        }
+    }
     TCP{
         id : tcp
         Component.onCompleted: {
@@ -112,7 +120,7 @@ Window {
                         if( pageloader.item.win(posX,posY) ) {
                             var str = Packet.packet("gameover","","",id,posX,posY)
                             tcp.sendMsg(str)
-                            overgame()
+                            pageloader.item.overgame()
                         }
                         currentColor = "white"
                     }else if(obj['table']['turn'] === "black" && currentColor == "#ffffff"){
@@ -122,7 +130,7 @@ Window {
                         if( pageloader.item.win(posX,posY) ) {
                             var str = Packet.packet("gameover","","",id,posX,posY)
                             tcp.sendMsg(str)
-                            overgame()
+                            pageloader.item.overgame()
                         }
                         currentColor = "black"
                     }
@@ -137,7 +145,9 @@ Window {
                         pageloader.item.setMouse(true)
                     }
                     break;
-                default:
+                case "gameover":
+                    pageloader.item.overgame()
+                    exiting.start()
                     break;
 
             }
