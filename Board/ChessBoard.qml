@@ -102,8 +102,9 @@ Rectangle{
                 var posY = Math.round( (selectedframe.y+(chessBoard.height/32)) / (chessBoard.height/16)) -1
                 if(chessBoard.forbidden(posX,posY)){
                     var str = Packet.packet("play","","",id,posX,posY)
+                    console.log("Sent:" ,str)
                     tcp.sendMsg(str)
-                    chessBoard.createChess(posX,posY)
+                    createChess(posX,posY)
                 }
             }
             function relocation(){
@@ -195,6 +196,9 @@ Rectangle{
         function forbidden(posX,posY){
             //首子必在天元(7,7)
             if(board_empty()){
+                var str = Packet.packet("play","","",id,7,7)
+                console.log("Sent:" ,str)
+                tcp.sendMsg(str)
                 createChess(7,7);
                 return false;
             }
@@ -493,5 +497,15 @@ Rectangle{
         }
         //end of check()
     }
+    function createChess(posX,posY){
+        if(chessPosition[posX][posY]===-1 ){
+            chessPosition[posX][posY] = (currentColor=="#000000") ? 1 : 0
+            MyScript.createChess(posX, posY, currentColor)
+            currentColor = (currentColor=="#000000") ? "white" : "black"
+        }else{
+            console.log("There has been a chess")
+        }
+    }
+
 }
 

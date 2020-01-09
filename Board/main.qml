@@ -10,13 +10,14 @@ Window {
     property var id
     property var username
     property var myColor
-    property color currentColor
+    property color currentColor : "black"
 
     id : main
     width   : 1280
     height  : 960
     visible : true
     color   : "green"
+
     Timer{
         id          : reconnect
         repeat      : false
@@ -89,20 +90,24 @@ Window {
                     game.start()
                     break;
                 case "playing":
-                    if(obj['table']['turn'] === "white" && currentColor === "#000000"){
-                        currentColor = "#ffffff"
+                    console.log(obj['table']['turn'],currentColor)
+                    if(obj['table']['turn'] === "white" && currentColor == "#000000"){
+                        currentColor = "white"
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
-                        chessBoard.createChess(posX,posY)
-                    }else if(obj['table']['turn'] === "black" && currentColor === "#ffffff"){
-                        currentColor = "#000000"
+                        console.log("create1")
+                        pageloader.item.createChess(posX,posY)
+                    }else if(obj['table']['turn'] === "black" && currentColor == "#ffffff"){
+                        currentColor = "black"
                         var posX = obj['table']['lastx']
                         var posY = obj['table']['lasty']
+                        console.log("create2")
+                        pageloader.item.createChess(posX,posY)
                     }
                     if(obj['table']['turn'] !== myColor){
-                        main.focus = false
+                       // main.active = false
                         waiting.start()
-                    }else main.focus = true
+                    }//else main.active = true
                     break;
                 default:
                     break;
@@ -126,7 +131,7 @@ Window {
         anchors.top : parent.top
         anchors.horizontalCenter: parent.horizontalCenter
 
-        source : "ChessBoard.qml"
+        source : "Login.qml"
     }
     PlayerCard{
         id    : player1
