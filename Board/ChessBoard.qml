@@ -35,9 +35,11 @@ Rectangle{
         id  : message
         width: chessBoard.width/8
         height: chessBoard.height/36
-        opacity: 0.7
+        opacity: 0.9
+        border.color: "black"
+        border.width: 3
         state: "Close"
-        color: "coral"
+        color: "white"
         x : chessBoard.x + chessBoard.width/2
         y : chessBoard.y + chessBoard.height/2
         z : 0
