@@ -505,15 +505,18 @@ Rectangle{
                 black_line++;
             else
                 black_line = 0;
-            if(chessPosition[posX][i]===0)
-                white_line++;
-            else
-                white_line = 0;
+
             if(black_line===5){
                 win_player = "black";
                 return true;
             }
-            else if(white_line===5){
+        }
+        for(var i = y_min; i <= y_max ; i++){
+            if(chessPosition[posX][i]===0)
+                white_line++;
+            else
+                white_line = 0;            
+            if(white_line===5){
                 win_player = "white";
                 return true;
             }
@@ -524,15 +527,18 @@ Rectangle{
                 black_line++;
             else
                 black_line = 0;
-            if(chessPosition[i][posY]===0)
-                white_line++;
-            else
-                white_line = 0;
             if(black_line===5){
                 win_player = "black";
                 return true;
             }
-            else if(white_line===5){
+        }
+        for(var i = x_min ; i<=max ; i++){
+            if(chessPosition[i][posY]===0)
+                white_line++;
+            else
+                white_line = 0;
+
+            if(white_line===5){
                 win_player = "white";
                 return true;
             }
@@ -544,15 +550,18 @@ Rectangle{
                 black_line++;
             else
                 black_line = 0;
-            if(chessPosition[x_min+i][y_min+i]===0)
-                white_line++;
-            else
-                white_line = 0;
             if(black_line===5){
                 win_player = "black";
                 return true;
             }
-            else if(white_line===5){
+        }
+        for(var i =0 ; i<=temp ; i++){
+            if(chessPosition[x_min+i][y_min+i]===0)
+                white_line++;
+            else
+                white_line = 0;
+
+            if(white_line===5){
                 win_player = "white";
                 return true;
             }
@@ -563,15 +572,18 @@ Rectangle{
                 black_line++;
             else
                 black_line = 0;
-            if(chessPosition[x_min+i][y_max-i]===0)
-                white_line++;
-            else
-                white_line = 0;
+
             if(black_line===5){
                 win_player = "black";
                 return true;
             }
-            else if(white_line===5){
+        }
+        for(var i =0; i<temp ; i++){
+            if(chessPosition[x_min+i][y_max-i]===0)
+                white_line++;
+            else
+                white_line = 0;
+            if(white_line===5){
                 win_player = "white";
                 return true;
             }

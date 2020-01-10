@@ -65,8 +65,6 @@ Window {
             player2.setUserName("")
             player1.opacity = 0.7
             player2.opacity = 0.7
-            id = ""
-            username = ""
             myColor = ""
             currentColor = "black"
             pageloader.item.resetgame()
