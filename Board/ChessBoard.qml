@@ -532,7 +532,7 @@ Rectangle{
                 return true;
             }
         }
-        for(var i = x_min ; i<=max ; i++){
+        for(var i = x_min ; i<=x_max ; i++){
             if(chessPosition[i][posY]===0)
                 white_line++;
             else
